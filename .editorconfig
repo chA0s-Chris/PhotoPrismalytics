@@ -8,7 +8,7 @@ indent_style = space
 tab_width = 4
 trim_trailing_whitespace = true
 
-[*.{json,yml,md}]
+[*.{json,yml,yaml,md}]
 charset = utf-8
 indent_size = 2
 tab_width = 2
