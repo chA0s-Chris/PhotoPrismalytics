@@ -1,0 +1,18 @@
+﻿services:
+  photoprism:
+    image: photoprism/photoprism:latest
+    container_name: photoprism
+    restart: unless-stopped
+    ports:
+      - "2342:2342"
+    environment:
+      PHOTOPRISM_ADMIN_PASSWORD: "photoprism"
+      PHOTOPRISM_HTTP_PORT: 2342
+      PHOTOPRISM_DISABLE_TLS: "true"
+    volumes:
+      - "photoprism-originals:/photoprism/originals"
+      - "photoprism-storage:/photoprism/storage"
+
+volumes:
+  photoprism-storage:
+  photoprism-originals:
