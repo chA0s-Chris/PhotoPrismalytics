@@ -15,8 +15,11 @@ public static class PhotoPrismWebApplicationBuilderExtensions
         {
             var settings = serviceProvider.GetRequiredService<IOptions<PhotoPrismSettings>>().Value;
 
+            var token = settings.BearerToken ?? throw new InvalidOperationException("Bearer token is required.");
+            var tokenProvider = new PhotoPrismBearerTokenProvider(token);
+
             var factory = serviceProvider.GetRequiredService<IPhotoPrismClientFactory>();
-            return factory.CreatePhotoPrismClient(settings.BaseUrl);
+            return factory.CreatePhotoPrismClient(settings.BaseUrl, tokenProvider);
         });
 
         return builder;

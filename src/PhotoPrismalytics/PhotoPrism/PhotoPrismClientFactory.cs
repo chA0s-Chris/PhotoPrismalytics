@@ -15,14 +15,36 @@ internal class PhotoPrismClientFactory : IPhotoPrismClientFactory
         _logger = logger;
     }
 
-    public IPhotoPrismClient CreatePhotoPrismClient(Url baseUrl)
+    internal IFlurlClient CreateFlurlClient(Url baseUrl)
+    {
+        var flurlClient = FlurlHttp.ConfigureClientForUrl(baseUrl)
+                                   .WithSettings(settings =>
+                                   {
+                                       settings.Timeout = TimeSpan.FromSeconds(20);
+                                   })
+                                   .Build();
+
+        flurlClient.OnError(call =>
+        {
+            _logger.Error(call.Exception,
+                          "Requesting {Url} ({HttpMethod}) failed with status {Status}",
+                          call.Request.Url,
+                          call.Request.Verb.Method,
+                          call.Response.StatusCode);
+        });
+
+        return flurlClient;
+    }
+
+    public IPhotoPrismClient CreatePhotoPrismClient(Url baseUrl, PhotoPrismAuthTokenProvider tokenProvider)
     {
         ArgumentNullException.ThrowIfNull(baseUrl);
+        ArgumentNullException.ThrowIfNull(tokenProvider);
 
         _logger.Debug("Creating PhotoPrismClient for base URL {BaseUrl}", baseUrl);
 
-        var flurlClient = new FlurlClient(baseUrl);
-        var apiClient = new PhotoPrismApiClient(flurlClient);
+        var flurlClient = CreateFlurlClient(baseUrl);
+        var apiClient = new PhotoPrismApiClient(flurlClient, tokenProvider);
         return new PhotoPrismClient(apiClient);
     }
 }

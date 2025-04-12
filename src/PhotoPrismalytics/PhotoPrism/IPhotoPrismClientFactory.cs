@@ -6,5 +6,5 @@ using Flurl;
 
 internal interface IPhotoPrismClientFactory
 {
-    IPhotoPrismClient CreatePhotoPrismClient(Url baseUrl);
+    IPhotoPrismClient CreatePhotoPrismClient(Url baseUrl, PhotoPrismAuthTokenProvider tokenProvider);
 }

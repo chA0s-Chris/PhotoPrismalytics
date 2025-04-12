@@ -2,9 +2,7 @@
 // This file is licensed under the MIT license. See LICENSE in the project root for more information.
 namespace PhotoPrismalytics.PhotoPrism;
 
-public class PhotoPrismSettings
+public abstract class PhotoPrismAuthTokenProvider
 {
-    public String BaseUrl { get; init; } = "http://localhost:2342";
-
-    public String? BearerToken { get; init; }
+    public abstract Task<String> GetAuthTokenAsync(CancellationToken cancellationToken = default);
 }
